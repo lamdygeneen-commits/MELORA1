@@ -230,9 +230,10 @@ const Header: React.FC = () => {
           <div className="flex items-center gap-x-2 lg:gap-x-0">
             <Link
               to="/"
-              className={`font-display font-bold text-gray-800 dark:text-white text-2xl lg:text-3xl tracking-widest transform ${
-                isRTL ? "-translate-x-8" : "translate-x-8"
-              } lg:translate-x-0`}
+              className={
+                "font-display font-bold text-gray-800 dark:text-white text-2xl lg:text-3xl tracking-widest " +
+                (isRTL ? "mr-6 lg:mr-0" : "ml-6 lg:ml-0")
+              }
             >
               MELORA
             </Link>
