@@ -150,7 +150,7 @@ const Header: React.FC = () => {
       <header ref={headerRef} className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-40 shadow-sm dark:shadow-gray-800">
 
       {/* ROW 1 — Logo & Icon Buttons */}
-      <div className="px-4 py-2 md:py-3 flex items-center justify-between">
+      <div className="px-4 py-2 lg:py-3 flex items-center justify-between">
 
         {/* Mobile Side Menu Button */}
         <button onClick={openMenu} className="lg:hidden">
@@ -161,13 +161,13 @@ const Header: React.FC = () => {
         <Link
           to="/"
           className="font-display font-bold text-gray-800 dark:text-white
-                     text-xl md:text-3xl tracking-widest mx-auto lg:mx-0"
+                     text-2xl lg:text-3xl tracking-widest mx-auto lg:mx-0"
         >
           MELORA
         </Link>
 
         {/* Right Buttons */}
-        <div className="flex items-center gap-x-2">
+        <div className="flex items-center gap-x-3">
           <button onClick={toggleTheme}>
             {theme === "dark" ? <Moon /> : <Sun />}
           </button>
@@ -212,14 +212,14 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* ROW 3 — NAV (compact on mobile, full on desktop) */}
-      <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 pb-3">
+      {/* ROW 3 — DESKTOP NAV (hidden on mobile) */}
+      <nav className="hidden lg:flex justify-center gap-x-10 pb-3">
         {navLinks.map((link) => (
           <NavLink
             key={link.to}
             to={link.to}
             className="text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] 
-                       transition-colors pb-1 border-b-2 border-transparent text-sm md:text-base"
+                       transition-colors pb-1 border-b-2 border-transparent"
             style={({ isActive }) => (isActive ? activeLinkStyle : {})}
           >
             {link.text}
@@ -230,9 +230,9 @@ const Header: React.FC = () => {
         {isMobileMenuOpen && <MobileMenu />}
       </header>
 
-        {/* Spacer to offset sticky header so page content doesn't sit under it on small screens
-          Adjust `h-20` / `lg:h-16` if your header height changes. */}
-        <div className="h-20 lg:h-16" aria-hidden="true" />
+        {/* Spacer to offset sticky header so page content doesn't sit under it.
+           Uses measured header height so desktop layout is preserved while mobile remains compact. */}
+        <div style={{ height: spacerHeight }} aria-hidden="true" />
     </>
   );
 };
