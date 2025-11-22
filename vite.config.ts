@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+      base: "/MELORA1/",   // ← هذا مهم جداً لنشر الموقع على GitHub Pages
       server: {
         port: 3000,
         host: '0.0.0.0',
