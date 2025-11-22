@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Melora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              dark: {
+                DEFAULT: '#000000',
+              },
+            },
+            backgroundColor: {
+              dark: '#1a1a2e',
+            },
+          },
+        },
+      }
+      
+      // إضافة فئة dark عند تحميل الصفحة لضمان عمل الوضع الليلي
+      document.documentElement.classList.add('dark');
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Cairo', sans-serif;
+      }
+      .font-display {
+        font-family: 'Playfair Display', serif;
+      }
+      html[lang="en"] body {
+        font-family: 'Playfair Display', serif;
+      }
+      html[lang="en"] .font-body {
+        font-family: 'Cairo', sans-serif; /* Using Cairo for English too for consistency, but can be changed */
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      @keyframes slideInFromRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+      @keyframes slideOutToRight { from { transform: translateX(0); } to { transform: translateX(100%); } }
+      @keyframes slideInFromLeft { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+      @keyframes slideOutToLeft { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+      .animate-slide-in-right { animation: slideInFromRight 0.3s ease-out forwards; }
+      .animate-slide-out-right { animation: slideOutToRight 0.3s ease-out forwards; }
+      .animate-slide-in-left { animation: slideInFromLeft 0.3s ease-out forwards; }
+      .animate-slide-out-left { animation: slideOutToLeft 0.3s ease-out forwards; }
+      .animate-fade-in { animation: fadeIn 0.3s ease-in-out forwards; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.553.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <!--
+    Set a clean white background for the default (light) theme and a rich dark
+    background for night mode. The ThemeContext toggles the `dark` class on the
+    `<html>` element. When the `dark` class is present on the root element,
+    Tailwind's `dark:` variants take effect. By using plain colour classes here
+    instead of a hex value for the light theme we ensure consistency and
+    improve contrast, per the user’s request that the site should be white by
+    default.  You can tweak the dark colour here to taste; it currently uses a
+    very deep charcoal to match the existing dark palette.
+  -->
+  <body class="bg-white dark:bg-gray-950 transition-colors duration-300">
+    <script>
+      // Flicker-free theme initialization: add a light or dark class on the root
+      (function() {
+        const root = document.documentElement;
+        const stored = localStorage.getItem('theme');
+        
+        // جعل الوضع الليلي هو الوضع الافتراضي دائمًا
+        root.classList.add('dark');
+        root.classList.remove('light');
+        
+        // تحديث لون الخلفية مباشرة
+        document.body.className = 'bg-gray-950 transition-colors duration-300';
+      })();
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+/*
+ * Custom global styles for the Melora project.  This file is loaded after
+ * Tailwind via a link tag in index.html.  Use it to define any bespoke
+ * animations or classes that Tailwind cannot easily handle.
+ */
+
+/* Marquee animation for the hero image strip.  Duplicating the images in the
+ * markup (two identical sets) allows the flex container to scroll
+ * seamlessly.  When the first set slides completely off-screen, the second
+ * set takes its place, creating an infinite loop.
+ */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
