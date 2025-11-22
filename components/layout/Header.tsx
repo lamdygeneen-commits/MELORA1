@@ -4,7 +4,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 import { useCart } from "../../contexts/CartContext";
 import { useTheme } from "../../contexts/ThemeContext";
 import { useSearch } from "../../contexts/SearchContext";
-import { ShoppingBag, Menu, X, Sun, Moon, Search } from "lucide-react";
+import { ShoppingBag, Menu, X, Sun, Moon } from "lucide-react";
 
 const Header: React.FC = () => {
   const { t, toggleLanguage, isRTL } = useLanguage();
@@ -14,7 +14,6 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // قياس ارتفاع الهيدر لعمل مسافة تحته (حتى لا يختفي المحتوى تحت sticky header)
   const headerRef = useRef<HTMLElement | null>(null);
@@ -32,7 +31,7 @@ const Header: React.FC = () => {
 
   const activeLinkStyle = {
     color: "#D1A38A",
-    borderBottom: "2px solid #D1A38A",
+    borderBottom: "2px solid "#D1A38A",
   };
 
   const closeMenu = () => {
@@ -62,105 +61,61 @@ const Header: React.FC = () => {
     ) {
       navigate("/shop");
     }
-    setIsSearchOpen(false);
   };
 
   // ---------------- MOBILE MENU -----------------
   const MobileMenu = () => {
     return (
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden transition-all duration-300"
+        className="fixed inset-0 bg-black/50 z-50 lg:hidden animate-fade-in"
         onClick={closeMenu}
-        style={{
-          opacity: isClosing ? 0 : 1,
-          visibility: isClosing ? "hidden" : "visible"
-        }}
       >
         <div
-          className={`absolute top-0 bottom-0 bg-white dark:bg-gray-900 shadow-2xl 
-            w-[85vw] max-w-sm
+          className={`absolute top-0 bottom-0 bg-white dark:bg-gray-800 shadow-xl
+            w-[78vw] max-w-[320px] md:w-[300px] xl:w-[340px]
             ${isRTL ? "right-0" : "left-0"}
-            transform transition-transform duration-300 ease-out
             ${
               isClosing
                 ? isRTL
-                  ? "translate-x-full"
-                  : "-translate-x-full"
-                : "translate-x-0"
+                  ? "animate-slide-out-right"
+                  : "animate-slide-out-left"
+                : isRTL
+                ? "animate-slide-in-right"
+                : "animate-slide-in-left"
             }`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Mobile Header */}
-          <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-6 pb-4">
-            <div className="flex justify-between items-center">
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-12">
               <Link
                 to="/"
-                className="text-3xl font-display font-bold text-white tracking-widest"
+                className="text-2xl font-display text-gray-800 dark:text-white"
                 onClick={closeMenu}
               >
                 MELORA
               </Link>
-              <button 
-                onClick={closeMenu}
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-              >
-                <X size={24} className="text-white" />
+              <button onClick={closeMenu}>
+                <X size={24} className="text-gray-800 dark:text-gray-200" />
               </button>
             </div>
-          </div>
 
-          {/* Mobile Navigation */}
-          <div className="p-6 pt-8">
-            <nav className="flex flex-col space-y-1">
-              {navLinks.map((link, index) => (
+            <nav className="flex flex-col space-y-6 text-lg">
+              {navLinks.map((link) => (
                 <NavLink
                   key={link.to}
                   to={link.to}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-4 py-4 text-lg rounded-xl transition-all duration-200
-                     ${isRTL ? "text-right" : "text-left"} 
-                     ${
-                      isActive 
-                        ? "bg-gradient-to-r from-[#D1A38A]/10 to-[#D1A38A]/5 text-[#D1A38A] font-semibold border-r-4 border-[#D1A38A]" 
-                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-[#D1A38A]"
+                    `text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] transition-colors py-2
+                     ${isRTL ? "text-right" : "text-left"} ${
+                      isActive ? "font-bold text-[#D1A38A]" : ""
                     }`
                   }
                   onClick={closeMenu}
-                  style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <span>{link.text}</span>
-                  <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full opacity-50"></div>
+                  {link.text}
                 </NavLink>
               ))}
             </nav>
-
-            {/* Mobile Actions */}
-            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-6">
-                <span className="text-gray-500 dark:text-gray-400 text-sm font-medium">
-                  {t("theme")}
-                </span>
-                <button
-                  onClick={toggleTheme}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                >
-                  {theme === "dark" ? <Moon size={18} /> : <Sun size={18} />}
-                  <span className="text-sm">{theme === "dark" ? t("dark") : t("light")}</span>
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-gray-500 dark:text-gray-400 text-sm font-medium">
-                  {t("language")}
-                </span>
-                <button
-                  onClick={toggleLanguage}
-                  className="px-4 py-2 rounded-lg bg-[#D1A38A] text-white font-semibold hover:bg-[#c19277] transition-colors"
-                >
-                  {t("language")}
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -189,173 +144,156 @@ const Header: React.FC = () => {
       window.removeEventListener("resize", onResize);
       if (timeoutId) window.clearTimeout(timeoutId);
     };
-  }, [isMobileMenuOpen, isRTL, theme, isSearchOpen]);
+  }, [isMobileMenuOpen, isRTL, theme]);
 
   // ---------------- HEADER -----------------
   return (
     <>
-    {/* Desktop Layout */}
-    <div className="hidden lg:block px-6 py-4">
-      <div className="flex items-center justify-between">
-        {/* Left side - Icons */}
-        <div className="flex items-center gap-x-6">
-          {/* Cart */}
-          <Link to="/cart" className="relative group">
-            <ShoppingBag
-              size={24}
-              className="text-gray-700 dark:text-gray-300 group-hover:text-[#D1A38A] transition-colors"
-            />
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#D1A38A] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+      <header
+        ref={headerRef}
+        className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-40 shadow-sm dark:shadow-gray-800"
+      >
+        {/* الصف الأول: أيقونات اليسار + القائمة + البحث (ديسكتوب) + الشعار + أيقونات الموبايل */}
+        <div className="px-4 lg:px-6 py-2 lg:py-3 flex items-center justify-between gap-x-6">
+          {/* يسار الهيدر */}
+          <div className="flex items-center gap-x-2 md:gap-x-3">
+            {/* زر القائمة للموبايل فقط */}
+            <button onClick={openMenu} className="lg:hidden">
+              <Menu size={26} className="text-gray-800 dark:text-gray-200" />
+            </button>
 
-          {/* Language */}
-          <button
-            onClick={toggleLanguage}
-            className="text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] transition-colors"
-          >
-            {t("language")}
-          </button>
+            {/* مجموعة الأيقونات + البحث في الديسكتوب فقط (كما في التصميم الأصلي) */}
+            <div className="hidden lg:flex items-center gap-x-3">
+              {/* أيقونة السلة */}
+              <Link to="/cart" className="relative">
+                <ShoppingBag
+                  size={24}
+                  className="text-gray-800 dark:text-gray-200"
+                />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#D1A38A] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
 
-          {/* Theme */}
-          <button
-            onClick={toggleTheme}
-            className="text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] transition-colors"
-          >
-            {theme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
-          </button>
+              {/* اللغة */}
+              <button
+                onClick={toggleLanguage}
+                className="text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-[#D1A38A]"
+              >
+                {t("language")}
+              </button>
 
-          {/* Search */}
-          <div className="flex items-stretch border rounded-full overflow-hidden bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+              {/* الثيم */}
+              <button
+                onClick={toggleTheme}
+                className="text-gray-700 dark:text-gray-300 hover:text-[#D1A38A]"
+              >
+                {theme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
+              </button>
+
+              {/* شريط البحث - ديسكتوب فقط */}
+              <div className="hidden lg:flex items-stretch border rounded-full overflow-hidden bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+                <input
+                  type="text"
+                  placeholder={t("searchPlaceholder")}
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  className="bg-transparent focus:outline-none text-sm w-32 px-2 text-gray-800 dark:text-gray-200"
+                />
+                <button
+                  onClick={handleSearchSubmit}
+                  className="px-3 bg-[#d1a38a] text-white text-sm font-medium hover:bg-[#c19277] transition-colors"
+                >
+                  {t("searchProductLabel")}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* النافبار في المنتصف - ديسكتوب فقط */}
+          <nav className="hidden lg:flex items-center gap-x-8">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className="text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] transition-colors pb-1 border-b-2 border-transparent"
+                style={({ isActive }) => (isActive ? activeLinkStyle : {})}
+              >
+                {link.text}
+              </NavLink>
+            ))}
+          </nav>
+
+          {/* الشعار في اليمين على الديسكتوب، وفي المنتصف تقريبًا على الموبايل */}
+          <div className="flex items-center gap-x-2 lg:gap-x-0">
+            <Link
+              to="/"
+              className={`font-display font-bold text-gray-800 dark:text-white text-2xl lg:text-3xl tracking-widest transform ${
+                isRTL ? "translate-x-4" : "-translate-x-4"
+              } lg:translate-x-0`}
+            >
+              MELORA
+            </Link>
+
+            {/* مجموعة الأيقونات في الموبايل (ثيم + لغة + سلة) */}
+            <div className="flex items-center gap-x-2 lg:hidden ml-2">
+              <button
+                onClick={toggleTheme}
+                className="text-gray-700 dark:text-gray-300 hover:text-[#D1A38A]"
+              >
+                {theme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
+              </button>
+
+              <button
+                onClick={toggleLanguage}
+                className="text-sm font-bold text-gray-700 dark:text-gray-300 hover:text-[#D1A38A]"
+              >
+                {t("language")}
+              </button>
+
+              <Link to="/cart" className="relative">
+                <ShoppingBag
+                  size={24}
+                  className="text-gray-800 dark:text-gray-200"
+                />
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#D1A38A] text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* صف البحث في الموبايل فقط (تحت الهيدر) */}
+        <div className="px-4 pb-3 lg:hidden">
+          <div className="flex items-stretch border rounded-full overflow-hidden w-full bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
             <input
               type="text"
               placeholder={t("searchPlaceholder")}
               value={searchTerm}
               onChange={handleSearchChange}
-              className="bg-transparent focus:outline-none text-sm w-40 px-4 text-gray-800 dark:text-gray-200"
+              className="bg-transparent focus:outline-none text-sm px-3 py-2 w-full text-gray-800 dark:text-gray-200"
             />
             <button
               onClick={handleSearchSubmit}
-              className="px-4 bg-[#D1A38A] text-white text-sm font-medium hover:bg-[#c19277] transition-colors"
+              className="px-4 bg-[#d1a38a] text-white text-sm font-medium hover:bg-[#c19277]"
             >
               {t("searchProductLabel")}
             </button>
           </div>
         </div>
 
-        {/* Center - Navigation */}
-        <nav className="flex items-center gap-x-8">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className="text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] transition-colors pb-1 border-b-2 border-transparent hover:border-[#D1A38A]/50"
-              style={({ isActive }) => (isActive ? activeLinkStyle : {})}
-            >
-              {link.text}
-            </NavLink>
-          ))}
-        </nav>
+        {isMobileMenuOpen && <MobileMenu />}
+      </header>
 
-        {/* Right - Logo */}
-        <Link
-          to="/"
-          className="font-display font-bold text-3xl tracking-widest text-gray-800 dark:text-white hover:text-[#D1A38A] transition-colors"
-        >
-          MELORA
-        </Link>
-      </div>
-    </div>
+      {/* Spacer لتفادي تغطية المحتوى بالهيدر الـ sticky */}
+      <div style={{ height: spacerHeight }} aria-hidden="true" />
+    </>
+  );
+};
 
-    {/* Mobile Layout */}
-    <div className="lg:hidden">
-      {/* Top mobile header */}
-      <div className="px-4 py-3 flex items-center justify-between">
-        {/* Left - Menu button */}
-        <button 
-          onClick={openMenu}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-        >
-          <Menu size={24} className="text-gray-700 dark:text-gray-300" />
-        </button>
-
-        {/* Center - Logo */}
-        <Link
-          to="/"
-          className="font-display font-bold text-2xl tracking-widest text-gray-800 dark:text-white"
-        >
-          MELORA
-        </Link>
-
-        {/* Right - Icons */}
-        <div className="flex items-center gap-x-1">
-          <button
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          >
-            <Search size={20} className="text-gray-700 dark:text-gray-300" />
-          </button>
-
-          <Link to="/cart" className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            <ShoppingBag size={20} className="text-gray-700 dark:text-gray-300" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#D1A38A] text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold text-[10px]">
-                {cartCount}
-              </span>
-            )}
-          </Link>
-        </div>
-      </div>
-
-      {/* Mobile Search Bar */}
-      <div className={`px-4 pb-3 transition-all duration-300 overflow-hidden ${
-        isSearchOpen ? 'max-h-16 opacity-100' : 'max-h-0 opacity-0'
-      }`}>
-        <div className="flex items-stretch border rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-800 dark:border-gray-700 shadow-sm">
-          <input
-            type="text"
-            placeholder={t("searchPlaceholder")}
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="bg-transparent focus:outline-none text-sm px-4 py-3 w-full text-gray-800 dark:text-gray-200"
-          />
-          <button
-            onClick={handleSearchSubmit}
-            className="px-4 bg-[#D1A38A] text-white text-sm font-medium hover:bg-[#c19277] transition-colors"
-          >
-            {t("searchProductLabel")}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Bottom Actions */}
-      <div className="px-4 pb-3">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          >
-            {theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}
-            <span className="text-sm font-medium">{theme === "dark" ? t("dark") : t("light")}</span>
-          </button>
-
-          <button
-            onClick={toggleLanguage}
-            className="px-4 py-2 rounded-lg bg-[#D1A38A] text-white text-sm font-semibold hover:bg-[#c19277] transition-colors"
-          >
-            {t("language")}
-          </button>
-        </div>
-      </div>
-    </div>
-
-    {isMobileMenuOpen && <MobileMenu />}
-  ```
-
-
-  {/* Spacer لتفادي تغطية المحتوى بالهيدر الـ sticky */}
-  <div style={{ height: spacerHeight }} aria-hidden="true" />
-</>
+export default Header;
