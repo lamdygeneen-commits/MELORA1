@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useCart } from "../../contexts/CartContext";
@@ -14,6 +14,9 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  // header measurement for dynamic spacer
+  const headerRef = useRef<HTMLElement | null>(null);
+  const [spacerHeight, setSpacerHeight] = useState("0px");
 
   const navLinks = [
     { to: "/", text: t("home") },
@@ -118,11 +121,36 @@ const Header: React.FC = () => {
 
   // ---------------- HEADER -----------------
 
+  useEffect(() => {
+    const updateHeight = () => {
+      if (headerRef.current) {
+        setSpacerHeight(`${headerRef.current.offsetHeight}px`);
+      }
+    };
+
+    // run once
+    updateHeight();
+
+    let timeoutId: number | undefined;
+    const onResize = () => {
+      if (timeoutId) window.clearTimeout(timeoutId);
+      timeoutId = window.setTimeout(updateHeight, 100);
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
+  }, [isMobileMenuOpen, isRTL, theme]);
+
   return (
-    <header className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-40 shadow-sm dark:shadow-gray-800">
+    <>
+      <header ref={headerRef} className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-40 shadow-sm dark:shadow-gray-800">
 
       {/* ROW 1 — Logo & Icon Buttons */}
-      <div className="px-4 py-3 flex items-center justify-between">
+      <div className="px-4 py-2 md:py-3 flex items-center justify-between">
 
         {/* Mobile Side Menu Button */}
         <button onClick={openMenu} className="lg:hidden">
@@ -133,13 +161,13 @@ const Header: React.FC = () => {
         <Link
           to="/"
           className="font-display font-bold text-gray-800 dark:text-white
-                     text-2xl md:text-3xl tracking-widest mx-auto lg:mx-0"
+                     text-xl md:text-3xl tracking-widest mx-auto lg:mx-0"
         >
           MELORA
         </Link>
 
         {/* Right Buttons */}
-        <div className="flex items-center gap-x-3">
+        <div className="flex items-center gap-x-2">
           <button onClick={toggleTheme}>
             {theme === "dark" ? <Moon /> : <Sun />}
           </button>
@@ -172,26 +200,26 @@ const Header: React.FC = () => {
             placeholder={t("searchPlaceholder")}
             value={searchTerm}
             onChange={handleSearchChange}
-            className="bg-transparent focus:outline-none text-sm px-3 py-2 w-full
+            className="bg-transparent focus:outline-none text-sm md:text-sm px-2 md:px-3 py-1 md:py-2 w-full
                       text-gray-800 dark:text-gray-200"
           />
           <button
             onClick={handleSearchSubmit}
-            className="px-4 bg-[#d1a38a] text-white text-sm font-medium hover:bg-[#c19277]"
+            className="px-3 md:px-4 bg-[#d1a38a] text-white text-sm font-medium hover:bg-[#c19277]"
           >
             {t("searchProductLabel")}
           </button>
         </div>
       </div>
 
-      {/* ROW 3 — DESKTOP NAV */}
-      <nav className="hidden lg:flex justify-center gap-x-10 pb-3">
+      {/* ROW 3 — NAV (compact on mobile, full on desktop) */}
+      <nav className="flex flex-wrap justify-center gap-x-4 gap-y-2 pb-3">
         {navLinks.map((link) => (
           <NavLink
             key={link.to}
             to={link.to}
             className="text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] 
-                       transition-colors pb-1 border-b-2 border-transparent"
+                       transition-colors pb-1 border-b-2 border-transparent text-sm md:text-base"
             style={({ isActive }) => (isActive ? activeLinkStyle : {})}
           >
             {link.text}
@@ -199,8 +227,13 @@ const Header: React.FC = () => {
         ))}
       </nav>
 
-      {isMobileMenuOpen && <MobileMenu />}
-    </header>
+        {isMobileMenuOpen && <MobileMenu />}
+      </header>
+
+        {/* Spacer to offset sticky header so page content doesn't sit under it on small screens
+          Adjust `h-20` / `lg:h-16` if your header height changes. */}
+        <div className="h-20 lg:h-16" aria-hidden="true" />
+    </>
   );
 };
 
