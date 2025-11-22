@@ -31,7 +31,7 @@ const Header: React.FC = () => {
 
   const activeLinkStyle = {
     color: "#D1A38A",
-    borderBottom: "2px solid "#D1A38A",
+    borderBottom: "2px solid #D1A38A",
   };
 
   const closeMenu = () => {
@@ -230,15 +230,13 @@ const Header: React.FC = () => {
           <div className="flex items-center gap-x-2 lg:gap-x-0">
             <Link
               to="/"
-              className={`font-display font-bold text-gray-800 dark:text-white text-2xl lg:text-3xl tracking-widest transform ${
-                isRTL ? "translate-x-4" : "-translate-x-4"
-              } lg:translate-x-0`}
+              className="font-display font-bold text-gray-800 dark:text-white text-2xl lg:text-3xl tracking-widest"
             >
               MELORA
             </Link>
 
             {/* مجموعة الأيقونات في الموبايل (ثيم + لغة + سلة) */}
-            <div className="flex items-center gap-x-2 lg:hidden ml-2">
+            <div className="flex items-center gap-x-3 lg:hidden ml-4">
               <button
                 onClick={toggleTheme}
                 className="text-gray-700 dark:text-gray-300 hover:text-[#D1A38A]"
