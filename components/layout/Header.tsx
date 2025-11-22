@@ -64,61 +64,63 @@ const Header: React.FC = () => {
   };
 
   // ---------------- MOBILE MENU -----------------
-  const MobileMenu = () => (
-    <div
-      className="fixed inset-0 bg-black/50 z-50 lg:hidden animate-fade-in"
-      onClick={closeMenu}
-    >
+  const MobileMenu = () => {
+    return (
       <div
-        className={`absolute top-0 bottom-0 bg-white dark:bg-gray-800 shadow-xl 
-          w-[78vw] max-w-[320px] md:w-[300px] xl:w-[340px]
-          ${isRTL ? "right-0" : "left-0"}
-          ${
-            isClosing
-              ? isRTL
-                ? "animate-slide-out-right"
-                : "animate-slide-out-left"
-              : isRTL
-              ? "animate-slide-in-right"
-              : "animate-slide-in-left"
-          }`}
-        onClick={(e) => e.stopPropagation()}
+        className="fixed inset-0 bg-black/50 z-50 lg:hidden animate-fade-in"
+        onClick={closeMenu}
       >
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-12">
-            <Link
-              to="/"
-              className="text-2xl font-display text-gray-800 dark:text-white"
-              onClick={closeMenu}
-            >
-              MELORA
-            </Link>
-            <button onClick={closeMenu}>
-              <X size={24} className="text-gray-800 dark:text-gray-200" />
-            </button>
-          </div>
-
-          <nav className="flex flex-col space-y-6 text-lg">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.to}
-                to={link.to}
-                className={({ isActive }) =>
-                  `text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] transition-colors py-2 
-                   ${isRTL ? "text-right" : "text-left"} ${
-                    isActive ? "font-bold text-[#D1A38A]" : ""
-                  }`
-                }
+        <div
+          className={`absolute top-0 bottom-0 bg-white dark:bg-gray-800 shadow-xl
+            w-[78vw] max-w-[320px] md:w-[300px] xl:w-[340px]
+            ${isRTL ? "right-0" : "left-0"}
+            ${
+              isClosing
+                ? isRTL
+                  ? "animate-slide-out-right"
+                  : "animate-slide-out-left"
+                : isRTL
+                ? "animate-slide-in-right"
+                : "animate-slide-in-left"
+            }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="p-6">
+            <div className="flex justify-between items-center mb-12">
+              <Link
+                to="/"
+                className="text-2xl font-display text-gray-800 dark:text-white"
                 onClick={closeMenu}
               >
-                {link.text}
-              </NavLink>
-            ))}
-          </nav>
+                MELORA
+              </Link>
+              <button onClick={closeMenu}>
+                <X size={24} className="text-gray-800 dark:text-gray-200" />
+              </button>
+            </div>
+
+            <nav className="flex flex-col space-y-6 text-lg">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  className={({ isActive }) =>
+                    `text-gray-700 dark:text-gray-300 hover:text-[#D1A38A] transition-colors py-2
+                     ${isRTL ? "text-right" : "text-left"} ${
+                      isActive ? "font-bold text-[#D1A38A]" : ""
+                    }`
+                  }
+                  onClick={closeMenu}
+                >
+                  {link.text}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // ---------------- قياس الهيدر للمسافة السفلية -----------------
   useEffect(() => {
@@ -228,7 +230,9 @@ const Header: React.FC = () => {
           <div className="flex items-center gap-x-2 lg:gap-x-0">
             <Link
               to="/"
-              className="font-display font-bold text-gray-800 dark:text-white text-2xl lg:text-3xl tracking-widest"
+              className={`font-display font-bold text-gray-800 dark:text-white text-2xl lg:text-3xl tracking-widest transform ${
+                isRTL ? "-translate-x-8" : "translate-x-8"
+              } lg:translate-x-0`}
             >
               MELORA
             </Link>
