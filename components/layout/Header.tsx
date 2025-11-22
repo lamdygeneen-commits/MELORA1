@@ -101,17 +101,22 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-white/90 dark:bg-gray-900/80 backdrop-blur-md sticky top-0 z-40 shadow-sm dark:shadow-gray-800">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="lg:hidden">
+      <div className="container mx-auto px-6 py-4 flex justify-between items-center relative">
+        <div className="lg:hidden flex items-center">
           <button onClick={openMenu}>
             <Menu size={24} className="text-gray-800 dark:text-gray-200" />
           </button>
+          {/* Mobile logo shown next to hamburger */}
+          <Link to="/" className="ml-3 text-2xl font-display text-gray-800 dark:text-white lg:hidden">
+            MELORA
+          </Link>
         </div>
-        
-        <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">
-            <Link to="/" className="text-3xl font-display text-gray-800 dark:text-white">
-                MELORA
-            </Link>
+
+        {/* Desktop centered logo (hidden on mobile) */}
+        <div className="hidden lg:block lg:absolute lg:left-1/2 lg:-translate-x-1/2">
+          <Link to="/" className="text-3xl font-display text-gray-800 dark:text-white">
+            MELORA
+          </Link>
         </div>
 
         <nav className="hidden lg:flex lg:gap-x-8">
